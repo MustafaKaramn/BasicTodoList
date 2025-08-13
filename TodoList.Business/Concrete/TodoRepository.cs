@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TodoList.Business.Abstract;
+using TodoList.Business.DTOs;
 using TodoList.Core.Entities;
 using TodoList.DataAccess.Context;
 
@@ -13,18 +15,24 @@ namespace TodoList.Business.Concrete
     public class TodoRepository : ITodoRepository
     {
         private readonly AppDbContext _context;
+        private readonly IMapper _mapper;
 
-        public TodoRepository(AppDbContext context)
+        public TodoRepository(AppDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<TodoItem> CreateTodoAsync(TodoItem todoItem)
+        public async Task<TodoItemDto> CreateTodoAsync(CreateTodoDto createTodo)
         {
+            var todoItem = _mapper.Map<TodoItem>(createTodo);
             todoItem.CreatedDate = DateTime.Now;
+            todoItem.IsCompleted = false;
+
             _context.TodoItems.Add(todoItem);
             await _context.SaveChangesAsync();
-            return todoItem;
+
+            return _mapper.Map<TodoItemDto>(todoItem);
         }
 
         public async Task DeleteTodoAsync(Guid id)
@@ -38,38 +46,37 @@ namespace TodoList.Business.Concrete
             }
         }
 
-        public async Task<List<TodoItem>> GetAllTodoAsync()
+        public async Task<List<TodoItemDto>> GetAllTodoAsync()
         {
-            return await _context.TodoItems.ToListAsync();
+            var todos = await _context.TodoItems.ToListAsync();
+            return _mapper.Map<List<TodoItemDto>>(todos);
         }
 
-        public async Task<TodoItem> GetTodoByIdAsync(Guid id)
+        public async Task<TodoItemDto> GetTodoByIdAsync(Guid id)
         {
             var todoItem = await _context.TodoItems.FindAsync(id);
 
-            return todoItem;
+            return _mapper.Map<TodoItemDto>(todoItem);
         }
 
-        public async Task<List<TodoItem>> GetTodoByStatusAsync(bool isCompleted)
+        public async Task<List<TodoItemDto>> GetTodoByStatusAsync(bool isCompleted)
         {
-            return await _context.TodoItems
+            var todos = await _context.TodoItems
                 .Where(t => t.IsCompleted == isCompleted)
                 .ToListAsync();
+
+            return _mapper.Map<List<TodoItemDto>>(todos);
         }
 
-        public async Task UpdateTodoAsync(TodoItem todoItem)
+        public async Task UpdateTodoAsync(Guid id, UpdateTodoDto todoItem)
         {
-            var todo = _context.TodoItems.Find(todoItem.Id);
+            var todo = _context.TodoItems.Find(id);
 
             if (todo != null)
             {
-                todo.Description = todoItem.Description;
-                todo.Title = todoItem.Title;
-                todo.IsCompleted = todoItem.IsCompleted;
+                _mapper.Map(todoItem, todo);
                 todo.UpdatedDate = DateTime.Now;
-                todo.CreatedDate = todo.CreatedDate;
 
-                _context.Entry(todo).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
             }
         }

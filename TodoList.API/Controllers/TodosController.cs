@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TodoList.Business.Abstract;
+using TodoList.Business.DTOs;
 using TodoList.Core.Entities;
 
 namespace TodoList.API.Controllers
@@ -10,32 +12,34 @@ namespace TodoList.API.Controllers
     public class TodosController : ControllerBase
     {
         private readonly ITodoRepository _todoRepository;
+        private readonly IMapper _mapper;
 
-        public TodosController(ITodoRepository todoRepository)
+        public TodosController(ITodoRepository todoRepository, IMapper mapper)
         {
             _todoRepository = todoRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<TodoItem>>> GetAll()
+        public async Task<ActionResult<List<TodoItemDto>>> GetAll()
         {
             var todos = await _todoRepository.GetAllTodoAsync();
-            return Ok(todos);
+            return Ok(_mapper.Map<List<TodoItemDto>>(todos));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<TodoItem>> GetTodoById(Guid id)
+        public async Task<ActionResult<TodoItemDto>> GetTodoById(Guid id)
         {
             var todo = await _todoRepository.GetTodoByIdAsync(id);
             if (todo == null)
             {
                 return NotFound();
             }
-            return Ok(todo);
+            return Ok(_mapper.Map<TodoItemDto>(todo));
         }
 
         [HttpPost]
-        public async Task<ActionResult<TodoItem>> Create(TodoItem todoItem)
+        public async Task<ActionResult<TodoItemDto>> Create(CreateTodoDto todoItem)
         {
             if (!ModelState.IsValid)
             {
@@ -47,20 +51,20 @@ namespace TodoList.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, TodoItem todoItem)
+        public async Task<IActionResult> Update(Guid id, UpdateTodoDto todoItem)
         {
-            if (id != todoItem.Id || !ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-         
+
             var existingTodo = await _todoRepository.GetTodoByIdAsync(id);
             if (existingTodo == null)
             {
                 return NotFound();
             }
 
-            await _todoRepository.UpdateTodoAsync(todoItem);
+            await _todoRepository.UpdateTodoAsync(id, todoItem);
             return NoContent();
         }
 
@@ -72,7 +76,7 @@ namespace TodoList.API.Controllers
             {
                 return NotFound();
             }
-         
+
             await _todoRepository.DeleteTodoAsync(id);
             return NoContent();
         }
