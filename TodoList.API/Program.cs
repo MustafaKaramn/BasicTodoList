@@ -1,6 +1,18 @@
+using Microsoft.EntityFrameworkCore;
+using TodoList.Business.Abstract;
+using TodoList.Business.Concrete;
+using TodoList.DataAccess.Context;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddDbContext<AppDbContext>(x =>
+{
+    x.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
+});
+
+builder.Services.AddScoped<ITodoRepository, TodoRepository>();
+
 
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
