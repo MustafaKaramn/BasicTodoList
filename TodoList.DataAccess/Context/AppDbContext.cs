@@ -28,6 +28,6 @@ namespace TodoList.DataAccess.Context
             base.OnModelCreating(modelBuilder);
         }
 
-        public DbSet<TodoItem> TodoLists { get; set; }
+        public DbSet<TodoItem> TodoItems { get; set; }
     }
 }
