@@ -27,7 +27,7 @@ namespace TodoList.Business.Concrete
             return todoItem;
         }
 
-        public async Task DeleteTodoAsync(int id)
+        public async Task DeleteTodoAsync(Guid id)
         {
             var todo = await _context.TodoItems.FindAsync(id);
 
@@ -43,7 +43,7 @@ namespace TodoList.Business.Concrete
             return await _context.TodoItems.ToListAsync();
         }
 
-        public async Task<TodoItem> GetTodoByIdAsync(int id)
+        public async Task<TodoItem> GetTodoByIdAsync(Guid id)
         {
             var todoItem = await _context.TodoItems.FindAsync(id);
 

@@ -10,10 +10,10 @@ namespace TodoList.Business.Abstract
     public interface ITodoRepository
     {
         Task<List<TodoItem>> GetAllTodoAsync();
-        Task<TodoItem> GetTodoByIdAsync(int id);
+        Task<TodoItem> GetTodoByIdAsync(Guid id);
         Task<TodoItem> CreateTodoAsync(TodoItem todoItem);
         Task UpdateTodoAsync(TodoItem todoItem);
-        Task DeleteTodoAsync(int id);
+        Task DeleteTodoAsync(Guid id);
         Task<List<TodoItem>> GetTodoByStatusAsync(bool isCompleted);
     }
 }
