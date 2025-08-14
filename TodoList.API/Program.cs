@@ -3,6 +3,8 @@ using TodoList.Business.Abstract;
 using TodoList.Business.Concrete;
 using TodoList.Business.Mappings;
 using TodoList.DataAccess.Context;
+using TodoList.DataAccess.Interfaces;
+using TodoList.DataAccess.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +14,11 @@ builder.Services.AddDbContext<AppDbContext>(x =>
     x.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
 });
 
-builder.Services.AddScoped<ITodoRepository, TodoRepository>();
+//Generic Repository:
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+//Services:
+builder.Services.AddScoped<ITodoService, TodoService>();
 
 
 

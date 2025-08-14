@@ -11,26 +11,26 @@ namespace TodoList.API.Controllers
     [ApiController]
     public class TodosController : ControllerBase
     {
-        private readonly ITodoRepository _todoRepository;
+        private readonly ITodoService _todoService;
         private readonly IMapper _mapper;
 
-        public TodosController(ITodoRepository todoRepository, IMapper mapper)
+        public TodosController(ITodoService todoService, IMapper mapper)
         {
-            _todoRepository = todoRepository;
+            _todoService = todoService;
             _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<TodoItemDto>>> GetAll()
         {
-            var todos = await _todoRepository.GetAllTodoAsync();
+            var todos = await _todoService.GetAllTodoAsync();
             return Ok(_mapper.Map<List<TodoItemDto>>(todos));
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<TodoItemDto>> GetTodoById(Guid id)
         {
-            var todo = await _todoRepository.GetTodoByIdAsync(id);
+            var todo = await _todoService.GetTodoByIdAsync(id);
             if (todo == null)
             {
                 return NotFound();
@@ -46,7 +46,7 @@ namespace TodoList.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var createdTodo = await _todoRepository.CreateTodoAsync(todoItem);
+            var createdTodo = await _todoService.CreateTodoAsync(todoItem);
             return CreatedAtAction(nameof(GetTodoById), new { id = createdTodo.Id }, createdTodo);
         }
 
@@ -58,26 +58,26 @@ namespace TodoList.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var existingTodo = await _todoRepository.GetTodoByIdAsync(id);
+            var existingTodo = await _todoService.GetTodoByIdAsync(id);
             if (existingTodo == null)
             {
                 return NotFound();
             }
 
-            await _todoRepository.UpdateTodoAsync(id, todoItem);
+            await _todoService.UpdateTodoAsync(id, todoItem);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var todo = await _todoRepository.GetTodoByIdAsync(id);
+            var todo = await _todoService.GetTodoByIdAsync(id);
             if (todo == null)
             {
                 return NotFound();
             }
 
-            await _todoRepository.DeleteTodoAsync(id);
+            await _todoService.DeleteTodoAsync(id);
             return NoContent();
         }
     }

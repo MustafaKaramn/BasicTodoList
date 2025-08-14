@@ -8,13 +8,13 @@ using TodoList.Core.Entities;
 
 namespace TodoList.Business.Abstract
 {
-    public interface ITodoRepository
+    public interface ITodoService
     {
-        Task<List<TodoItemDto>> GetAllTodoAsync();
+        Task<IEnumerable<TodoItemDto>> GetAllTodoAsync();
         Task<TodoItemDto> GetTodoByIdAsync(Guid id);
         Task<TodoItemDto> CreateTodoAsync(CreateTodoDto todoItem);
         Task UpdateTodoAsync(Guid id, UpdateTodoDto todoItem);
         Task DeleteTodoAsync(Guid id);
-        Task<List<TodoItemDto>> GetTodoByStatusAsync(bool isCompleted);
+        Task<IEnumerable<TodoItemDto>> GetTodoByStatusAsync(bool isCompleted);
     }
 }
