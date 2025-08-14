@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TodoList.API.Middlewares;
 using TodoList.Business.Abstract;
 using TodoList.Business.Concrete;
 using TodoList.Business.Mappings;
@@ -28,6 +29,7 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
