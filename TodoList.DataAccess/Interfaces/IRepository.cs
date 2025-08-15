@@ -11,8 +11,8 @@ namespace TodoList.DataAccess.Interfaces
     {
         Task<T> GetByIdAsync(Guid id);
         Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> filter = null);
-        Task AddAsync(T entity);
-        Task UpdateAsync(T entity);
-        Task DeleteAsync(T entity);
+        void Add(T entity);
+        void Update(T entity);
+        void Delete(T entity);
     }
 }

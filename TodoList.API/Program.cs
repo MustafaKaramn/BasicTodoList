@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using TodoList.API.Middlewares;
-using TodoList.Business.Abstract;
-using TodoList.Business.Concrete;
 using TodoList.Business.Mappings;
+using TodoList.Business.Interfaces;
+using TodoList.Business.Services;
 using TodoList.DataAccess.Context;
 using TodoList.DataAccess.Interfaces;
 using TodoList.DataAccess.Repository;
@@ -15,12 +15,11 @@ builder.Services.AddDbContext<AppDbContext>(x =>
     x.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
 });
 
-//Generic Repository:
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+//Unit of Work:
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-//Services:
+//Repositories:
 builder.Services.AddScoped<ITodoService, TodoService>();
-
 
 
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using TodoList.Business.DTOs;
 using TodoList.Core.Entities;
 
-namespace TodoList.Business.Abstract
+namespace TodoList.Business.Interfaces
 {
     public interface ITodoService
     {

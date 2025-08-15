@@ -21,16 +21,19 @@ namespace TodoList.DataAccess.Repository
             _dbSet = context.Set<T>();
         }
 
-        public async Task AddAsync(T entity)
+        public void Add(T entity)
         {
-            await _dbSet.AddAsync(entity);
-            await _context.SaveChangesAsync();
+            _dbSet.Add(entity);
         }
 
-        public async Task DeleteAsync(T entity)
+        public void Delete(T entity)
         {
             _dbSet.Remove(entity);
-            await _context.SaveChangesAsync();
+        }
+        public void Update(T entity)
+        {
+            _dbSet.Attach(entity);
+            _context.Entry(entity).State = EntityState.Modified;
         }
 
         public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> filter = null)
@@ -48,14 +51,6 @@ namespace TodoList.DataAccess.Repository
         public async Task<T> GetByIdAsync(Guid id)
         {
             return await _dbSet.FindAsync(id);
-        }
-
-        public async Task UpdateAsync(T entity)
-        {
-            _dbSet.Attach(entity);
-            _context.Entry(entity).State = EntityState.Modified;
-
-            await _context.SaveChangesAsync();
         }
     }
 }

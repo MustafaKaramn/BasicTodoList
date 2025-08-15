@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TodoList.Business.Abstract;
+using TodoList.Business.Interfaces;
 using TodoList.Business.DTOs;
 using TodoList.Core.Entities;
 
