@@ -22,16 +22,9 @@ namespace TodoList.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagedResponse<TodoItemDto>>> GetAll([FromQuery] PaginationParameters paginationParameters)
+        public async Task<ActionResult<PagedResponse<TodoItemDto>>> GetAll([FromQuery] TodoQueryParameters queryParameters)
         {
-            var todos = await _todoService.GetAllTodoAsync(paginationParameters);
-            return Ok(todos);
-        }
-
-        [HttpGet("GetByStatus/{status}")]
-        public async Task<ActionResult<PagedResponse<TodoItemDto>>> GetByStatus(bool status, [FromQuery] PaginationParameters paginationParameters)
-        {
-            var todos = await _todoService.GetTodoByStatusAsync(status, paginationParameters);
+            var todos = await _todoService.GetAllTodoAsync(queryParameters);
             return Ok(todos);
         }
 

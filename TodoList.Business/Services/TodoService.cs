@@ -49,40 +49,30 @@ namespace TodoList.Business.Services
             }
         }
 
-        public async Task<PagedResponse<TodoItemDto>> GetAllTodoAsync(PaginationParameters paginationParameters)
+        public async Task<PagedResponse<TodoItemDto>> GetAllTodoAsync(TodoQueryParameters queryParameters)
         {
-            var totalCount = await _unitOfWork.TodoRepository.CountAsync();
+            Expression<Func<TodoItem, bool>> filter = null;
 
-            var skipAmount = (paginationParameters.PageNumber - 1) * paginationParameters.PageSize;
+            if (queryParameters.Status.HasValue)
+            {
+                filter = t => t.IsCompleted == queryParameters.Status.Value;
+            }
 
-            var todoItems = await _unitOfWork.TodoRepository.GetAllAsync(skip: skipAmount, take: paginationParameters.PageSize);
+            var totalCount = await _unitOfWork.TodoRepository.CountAsync(filter);
+
+            var skipAmount = (queryParameters.PageNumber - 1) * queryParameters.PageSize;
+
+            var todoItems = await _unitOfWork.TodoRepository.GetAllAsync(filter, skip: skipAmount, take: queryParameters.PageSize);
 
             var todoItemDtos = _mapper.Map<List<TodoItemDto>>(todoItems);
 
-            return new PagedResponse<TodoItemDto>(todoItemDtos, currentPage: paginationParameters.PageNumber, pageSize: paginationParameters.PageSize, totalCount: totalCount);
+            return new PagedResponse<TodoItemDto>(todoItemDtos, currentPage: queryParameters.PageNumber, pageSize: queryParameters.PageSize, totalCount: totalCount);
         }
 
         public async Task<TodoItemDto> GetTodoByIdAsync(Guid id)
         {
             var todoItem = await _unitOfWork.TodoRepository.GetByIdAsync(id);
             return _mapper.Map<TodoItemDto>(todoItem);
-        }
-
-        public async Task<PagedResponse<TodoItemDto>> GetTodoByStatusAsync(bool isCompleted, PaginationParameters paginationParameters)
-        {
-            Expression<Func<TodoItem, bool>> filter = t => t.IsCompleted == isCompleted;
-
-            //var todos = await _unitOfWork.TodoRepository.GetAllAsync(filter);
-            //return _mapper.Map<IEnumerable<TodoItemDto>>(todos);
-
-            var totalCount = await _unitOfWork.TodoRepository.CountAsync(filter);
-            var skipAmount = (paginationParameters.PageNumber - 1) * paginationParameters.PageSize;
-
-            var todoItems = await _unitOfWork.TodoRepository.GetAllAsync(filter, skip: skipAmount, take: paginationParameters.PageSize);
-
-            var todoItemDtos = _mapper.Map<List<TodoItemDto>>(todoItems);
-
-            return new PagedResponse<TodoItemDto>(todoItemDtos, currentPage: paginationParameters.PageNumber, pageSize: paginationParameters.PageSize, totalCount: totalCount);
         }
 
         public async Task UpdateTodoAsync(Guid id, UpdateTodoDto todoItem)
