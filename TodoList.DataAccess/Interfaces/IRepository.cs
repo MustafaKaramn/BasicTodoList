@@ -10,7 +10,10 @@ namespace TodoList.DataAccess.Interfaces
     public interface IRepository<T> where T : class
     {
         Task<T> GetByIdAsync(Guid id);
-        Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> filter = null);
+
+        Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, int? skip = null, int? take = null);
+        Task<int> CountAsync(Expression<Func<T, bool>>? filter = null);
+
         void Add(T entity);
         void Update(T entity);
         void Delete(T entity);

@@ -36,7 +36,7 @@ namespace TodoList.DataAccess.Repository
             _context.Entry(entity).State = EntityState.Modified;
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> filter = null)
+        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, int? skip = null, int? take = null)
         {
             IQueryable<T> query = _dbSet;
 
@@ -44,8 +44,26 @@ namespace TodoList.DataAccess.Repository
             {
                 query = query.Where(filter);
             }
+            if (skip.HasValue)
+            {
+                query = query.Skip(skip.Value);
+            }
+            if (take.HasValue)
+            {
+                query = query.Take(take.Value);
+            }
 
             return await query.ToListAsync();
+        }
+
+        public async Task<int> CountAsync(Expression<Func<T, bool>>? filter = null)
+        {
+            IQueryable<T> query = _dbSet;
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            return await query.CountAsync();
         }
 
         public async Task<T> GetByIdAsync(Guid id)

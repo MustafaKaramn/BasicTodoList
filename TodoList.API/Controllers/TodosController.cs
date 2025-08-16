@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using TodoList.Business.Interfaces;
 using TodoList.Business.DTOs;
 using TodoList.Core.Entities;
+using TodoList.Core.Helpers;
 
 namespace TodoList.API.Controllers
 {
@@ -21,10 +22,17 @@ namespace TodoList.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<TodoItemDto>>> GetAll()
+        public async Task<ActionResult<PagedResponse<TodoItemDto>>> GetAll([FromQuery] PaginationParameters paginationParameters)
         {
-            var todos = await _todoService.GetAllTodoAsync();
-            return Ok(_mapper.Map<List<TodoItemDto>>(todos));
+            var todos = await _todoService.GetAllTodoAsync(paginationParameters);
+            return Ok(todos);
+        }
+
+        [HttpGet("GetByStatus/{status}")]
+        public async Task<ActionResult<PagedResponse<TodoItemDto>>> GetByStatus(bool status, [FromQuery] PaginationParameters paginationParameters)
+        {
+            var todos = await _todoService.GetTodoByStatusAsync(status, paginationParameters);
+            return Ok(todos);
         }
 
         [HttpGet("{id}")]
