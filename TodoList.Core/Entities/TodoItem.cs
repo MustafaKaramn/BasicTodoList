@@ -14,5 +14,7 @@ namespace TodoList.Core.Entities
         public bool IsCompleted { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
+
+        public ICollection<TodoList> TodoLists { get; set; } = new List<TodoList>();
     }
 }
