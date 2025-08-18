@@ -26,7 +26,7 @@ namespace TodoList.Business.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<TodoItemDto> CreateTodoAsync(CreateTodoItemDto createTodo)
+        public async Task<TodoItemDto> CreateAsync(CreateTodoItemDto createTodo)
         {
             var todoItem = _mapper.Map<TodoItem>(createTodo);
             todoItem.CreatedDate = DateTime.Now;
@@ -38,7 +38,7 @@ namespace TodoList.Business.Services
             return _mapper.Map<TodoItemDto>(todoItem);
         }
 
-        public async Task DeleteTodoAsync(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
             var todo = await _unitOfWork.TodoItemRepository.GetByIdAsync(id);
 
@@ -49,7 +49,7 @@ namespace TodoList.Business.Services
             }
         }
 
-        public async Task<PagedResponse<TodoItemDto>> GetAllTodoAsync(TodoQueryParameters queryParameters)
+        public async Task<PagedResponse<TodoItemDto>> GetAllAsync(TodoQueryParameters queryParameters)
         {
             Expression<Func<TodoItem, bool>> filter = null;
 
@@ -69,13 +69,13 @@ namespace TodoList.Business.Services
             return new PagedResponse<TodoItemDto>(todoItemDtos, currentPage: queryParameters.PageNumber, pageSize: queryParameters.PageSize, totalCount: totalCount);
         }
 
-        public async Task<TodoItemDto> GetTodoByIdAsync(Guid id)
+        public async Task<TodoItemDto> GetByIdAsync(Guid id)
         {
             var todoItem = await _unitOfWork.TodoItemRepository.GetByIdAsync(id);
             return _mapper.Map<TodoItemDto>(todoItem);
         }
 
-        public async Task UpdateTodoAsync(Guid id, UpdateTodoItemDto todoItem)
+        public async Task UpdateAsync(Guid id, UpdateTodoItemDto todoItem)
         {
             var todo = await _unitOfWork.TodoItemRepository.GetByIdAsync(id);
 

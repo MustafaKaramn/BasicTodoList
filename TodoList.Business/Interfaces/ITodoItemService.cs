@@ -11,10 +11,10 @@ namespace TodoList.Business.Interfaces
 {
     public interface ITodoItemService
     {
-        Task<PagedResponse<TodoItemDto>> GetAllTodoAsync(TodoQueryParameters queryParameters);
-        Task<TodoItemDto> GetTodoByIdAsync(Guid id);
-        Task<TodoItemDto> CreateTodoAsync(CreateTodoItemDto todoItem);
-        Task UpdateTodoAsync(Guid id, UpdateTodoItemDto todoItem);
-        Task DeleteTodoAsync(Guid id);
+        Task<PagedResponse<TodoItemDto>> GetAllAsync(TodoQueryParameters queryParameters);
+        Task<TodoItemDto> GetByIdAsync(Guid id);
+        Task<TodoItemDto> CreateAsync(CreateTodoItemDto todoItem);
+        Task UpdateAsync(Guid id, UpdateTodoItemDto todoItem);
+        Task DeleteAsync(Guid id);
     }
 }

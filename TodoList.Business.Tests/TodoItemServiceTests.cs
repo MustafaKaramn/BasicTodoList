@@ -33,7 +33,7 @@ namespace TodoList.Business.Tests
             _mockMapper.Setup(m => m.Map<TodoItemDto>(testTodoItem)).Returns(testTodoDto);
 
             //Act
-            var result = await _service.GetTodoByIdAsync(testId);
+            var result = await _service.GetByIdAsync(testId);
 
             //Assert
             result.Should().NotBeNull();
@@ -50,7 +50,7 @@ namespace TodoList.Business.Tests
             _mockUnitOfWork.Setup(uow => uow.TodoItemRepository.GetByIdAsync(testId)).ReturnsAsync((TodoItem)null);
 
             //Act
-            var result = await _service.GetTodoByIdAsync(testId);
+            var result = await _service.GetByIdAsync(testId);
 
             //Assert
             result.Should().BeNull();
