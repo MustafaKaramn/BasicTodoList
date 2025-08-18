@@ -38,7 +38,7 @@ try
     builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
     //Repositories:
-    builder.Services.AddScoped<ITodoService, TodoService>();
+    builder.Services.AddScoped<ITodoItemService, TodoItemService>();
 
 
     builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());

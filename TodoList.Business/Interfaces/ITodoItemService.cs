@@ -9,7 +9,7 @@ using TodoList.Core.Helpers;
 
 namespace TodoList.Business.Interfaces
 {
-    public interface ITodoService
+    public interface ITodoItemService
     {
         Task<PagedResponse<TodoItemDto>> GetAllTodoAsync(TodoQueryParameters queryParameters);
         Task<TodoItemDto> GetTodoByIdAsync(Guid id);

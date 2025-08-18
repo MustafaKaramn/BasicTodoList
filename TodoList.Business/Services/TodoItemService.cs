@@ -15,12 +15,12 @@ using TodoList.DataAccess.Interfaces;
 
 namespace TodoList.Business.Services
 {
-    public class TodoService : ITodoService
+    public class TodoItemService : ITodoItemService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public TodoService(IMapper mapper, IUnitOfWork unitOfWork)
+        public TodoItemService(IMapper mapper, IUnitOfWork unitOfWork)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;

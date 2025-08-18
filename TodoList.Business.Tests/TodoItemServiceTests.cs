@@ -8,18 +8,18 @@ using TodoList.DataAccess.Interfaces;
 
 namespace TodoList.Business.Tests
 {
-    public class TodoServiceTests
+    public class TodoItemServiceTests
     {
         private readonly Mock<IUnitOfWork> _mockUnitOfWork;
         private readonly Mock<IMapper> _mockMapper;
-        private readonly TodoService _service;
+        private readonly TodoItemService _service;
 
-        public TodoServiceTests()
+        public TodoItemServiceTests()
         {
             _mockUnitOfWork = new Mock<IUnitOfWork>();
             _mockMapper = new Mock<IMapper>();
 
-            _service = new TodoService(_mockMapper.Object, _mockUnitOfWork.Object);
+            _service = new TodoItemService(_mockMapper.Object, _mockUnitOfWork.Object);
         }
 
         [Fact]

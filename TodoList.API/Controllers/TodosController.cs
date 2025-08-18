@@ -12,10 +12,10 @@ namespace TodoList.API.Controllers
     [ApiController]
     public class TodosController : ControllerBase
     {
-        private readonly ITodoService _todoService;
+        private readonly ITodoItemService _todoService;
         private readonly IMapper _mapper;
 
-        public TodosController(ITodoService todoService, IMapper mapper)
+        public TodosController(ITodoItemService todoService, IMapper mapper)
         {
             _todoService = todoService;
             _mapper = mapper;
