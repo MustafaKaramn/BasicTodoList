@@ -39,7 +39,7 @@ try
 
     //Repositories:
     builder.Services.AddScoped<ITodoItemService, TodoItemService>();
-
+    builder.Services.AddScoped<ITodoListService, TodoListService>();
 
     builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
 
