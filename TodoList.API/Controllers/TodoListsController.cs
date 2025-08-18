@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TodoList.API.Services.Interfaces;
 using TodoList.Business.DTOs.TodoListDTOs;
 using TodoList.Business.Interfaces;
 
@@ -10,11 +11,41 @@ namespace TodoList.API.Controllers
     public class TodoListsController : ControllerBase
     {
         private readonly ITodoListService _todoListService;
+        private readonly IFileService _fileService;
 
-        public TodoListsController(ITodoListService todoListService)
+        public TodoListsController(ITodoListService todoListService, IFileService fileService)
         {
             _todoListService = todoListService;
+            _fileService = fileService;
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromForm] CreateTodoListDto createTodoListDto, IFormFile? file)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            string? imageUrl = null;
+
+            if (file != null && file.Length > 0)
+            {
+                try
+                {
+                    imageUrl = await _fileService.SaveFileAsync(file, "TodoListImages");
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+
+            var createdTodoList = await _todoListService.CreateAsync(createTodoListDto, imageUrl);
+
+            return CreatedAtAction(nameof(GetById), new { id = createdTodoList.Id }, createdTodoList);
+        }
+
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoListDto>>> GetAll()
@@ -44,6 +75,8 @@ namespace TodoList.API.Controllers
             }
 
             await _todoListService.DeleteAsync(id);
+            _fileService.DeleteFileAsync(todoList.ImageUrl);
+            
             return NoContent();
         }
     }

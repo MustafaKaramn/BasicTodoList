@@ -26,9 +26,11 @@ namespace TodoList.API.Services
                 throw new InvalidOperationException("File size exceeds the maximum limit of 5 MB.");
             }
 
-            var uniqeFileName = new Guid().ToString() + fileExtension;
+            var uniqeFileName = Guid.NewGuid().ToString() + fileExtension;
             var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", subFolder);
             var filePath = Path.Combine(uploadsFolder, uniqeFileName);
+
+            Directory.CreateDirectory(uploadsFolder);
 
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {

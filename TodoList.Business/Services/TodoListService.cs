@@ -21,9 +21,11 @@ namespace TodoList.Business.Services
             _mapper = mapper;
         }
 
-        public async Task<TodoListDto> CreateAsync(CreateTodoListDto todoList)
+        public async Task<TodoListDto> CreateAsync(CreateTodoListDto todoList, string? imageUrl)
         {
             var createdTodoList = _mapper.Map<Core.Entities.TodoList>(todoList);
+            createdTodoList.ImageUrl = imageUrl;
+
             _unitOfWork.TodoListRepository.Add(createdTodoList);
             await _unitOfWork.CompleteAsync();
 

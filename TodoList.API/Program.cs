@@ -8,6 +8,8 @@ using TodoList.DataAccess.Interfaces;
 using TodoList.DataAccess.Repository;
 using Serilog;
 using Serilog.Formatting.Json;
+using TodoList.API.Services.Interfaces;
+using TodoList.API.Services;
 
 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
 
@@ -40,6 +42,7 @@ try
     //Repositories:
     builder.Services.AddScoped<ITodoItemService, TodoItemService>();
     builder.Services.AddScoped<ITodoListService, TodoListService>();
+    builder.Services.AddScoped<IFileService, FileService>();
 
     builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
 
@@ -56,6 +59,8 @@ try
     }
 
     app.UseHttpsRedirection();
+
+    app.UseStaticFiles();
 
     app.UseAuthorization();
 

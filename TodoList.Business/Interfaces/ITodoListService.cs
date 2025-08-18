@@ -11,7 +11,7 @@ namespace TodoList.Business.Interfaces
     {
         Task<IEnumerable<TodoListDto>> GetAllAsync();
         Task<TodoListDto> GetByIdAsync(Guid id);
-        Task<TodoListDto> CreateAsync(CreateTodoListDto todoList);
+        Task<TodoListDto> CreateAsync(CreateTodoListDto todoList, string? imageUrl);
         Task UpdateAsync(Guid id, UpdateTodoListDto todoList);
         Task DeleteAsync(Guid id);
     }

@@ -22,4 +22,8 @@
     <ProjectReference Include="..\TodoList.Business\TodoList.Business.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>
