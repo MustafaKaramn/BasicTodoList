@@ -9,7 +9,8 @@ namespace TodoList.DataAccess.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        IRepository<TodoItem> TodoRepository { get; }
+        IRepository<TodoItem> TodoItemRepository { get; }
+        IRepository<TodoList.Core.Entities.TodoList> TodoListRepository { get; }
 
         Task<int> CompleteAsync();
     }

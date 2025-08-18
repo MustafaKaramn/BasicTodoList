@@ -29,7 +29,7 @@ namespace TodoList.Business.Tests
             var testTodoItem = new TodoItem { Id = testId, Title = "Test Todo", IsCompleted = false, CreatedDate = DateTime.Now };
             var testTodoDto = new TodoItemDto { Id = testId, Title = "Test Todo", IsCompleted = false, CreatedDate = DateTime.Now };
 
-            _mockUnitOfWork.Setup(uow => uow.TodoRepository.GetByIdAsync(testId)).ReturnsAsync(testTodoItem);
+            _mockUnitOfWork.Setup(uow => uow.TodoItemRepository.GetByIdAsync(testId)).ReturnsAsync(testTodoItem);
             _mockMapper.Setup(m => m.Map<TodoItemDto>(testTodoItem)).Returns(testTodoDto);
 
             //Act
@@ -47,7 +47,7 @@ namespace TodoList.Business.Tests
         {
             var testId = Guid.NewGuid();
 
-            _mockUnitOfWork.Setup(uow => uow.TodoRepository.GetByIdAsync(testId)).ReturnsAsync((TodoItem)null);
+            _mockUnitOfWork.Setup(uow => uow.TodoItemRepository.GetByIdAsync(testId)).ReturnsAsync((TodoItem)null);
 
             //Act
             var result = await _service.GetTodoByIdAsync(testId);

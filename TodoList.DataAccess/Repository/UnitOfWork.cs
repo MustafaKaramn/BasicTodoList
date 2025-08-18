@@ -12,12 +12,14 @@ namespace TodoList.DataAccess.Repository
     public class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _context;
-        public IRepository<TodoItem> TodoRepository { get; private set; }
+        public IRepository<TodoItem> TodoItemRepository { get; private set; }
+        public IRepository<TodoList.Core.Entities.TodoList> TodoListRepository { get; private set; }
 
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
-            TodoRepository = new Repository<TodoItem>(_context);
+            TodoItemRepository = new Repository<TodoItem>(_context);
+            TodoListRepository = new Repository<TodoList.Core.Entities.TodoList>(_context);
         }
 
         public async Task<int> CompleteAsync()

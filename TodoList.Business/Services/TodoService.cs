@@ -32,7 +32,7 @@ namespace TodoList.Business.Services
             todoItem.CreatedDate = DateTime.Now;
             todoItem.IsCompleted = false;
 
-            _unitOfWork.TodoRepository.Add(todoItem);
+            _unitOfWork.TodoItemRepository.Add(todoItem);
             await _unitOfWork.CompleteAsync();
 
             return _mapper.Map<TodoItemDto>(todoItem);
@@ -40,11 +40,11 @@ namespace TodoList.Business.Services
 
         public async Task DeleteTodoAsync(Guid id)
         {
-            var todo = await _unitOfWork.TodoRepository.GetByIdAsync(id);
+            var todo = await _unitOfWork.TodoItemRepository.GetByIdAsync(id);
 
             if (todo != null)
             {
-                _unitOfWork.TodoRepository.Delete(todo);
+                _unitOfWork.TodoItemRepository.Delete(todo);
                 await _unitOfWork.CompleteAsync();
             }
         }
@@ -58,11 +58,11 @@ namespace TodoList.Business.Services
                 filter = t => t.IsCompleted == queryParameters.Status.Value;
             }
 
-            var totalCount = await _unitOfWork.TodoRepository.CountAsync(filter);
+            var totalCount = await _unitOfWork.TodoItemRepository.CountAsync(filter);
 
             var skipAmount = (queryParameters.PageNumber - 1) * queryParameters.PageSize;
 
-            var todoItems = await _unitOfWork.TodoRepository.GetAllAsync(filter, skip: skipAmount, take: queryParameters.PageSize);
+            var todoItems = await _unitOfWork.TodoItemRepository.GetAllAsync(filter, skip: skipAmount, take: queryParameters.PageSize);
 
             var todoItemDtos = _mapper.Map<List<TodoItemDto>>(todoItems);
 
@@ -71,20 +71,20 @@ namespace TodoList.Business.Services
 
         public async Task<TodoItemDto> GetTodoByIdAsync(Guid id)
         {
-            var todoItem = await _unitOfWork.TodoRepository.GetByIdAsync(id);
+            var todoItem = await _unitOfWork.TodoItemRepository.GetByIdAsync(id);
             return _mapper.Map<TodoItemDto>(todoItem);
         }
 
         public async Task UpdateTodoAsync(Guid id, UpdateTodoItemDto todoItem)
         {
-            var todo = await _unitOfWork.TodoRepository.GetByIdAsync(id);
+            var todo = await _unitOfWork.TodoItemRepository.GetByIdAsync(id);
 
             if (todo != null)
             {
                 _mapper.Map(todoItem, todo);
                 todo.UpdatedDate = DateTime.Now;
 
-                _unitOfWork.TodoRepository.Update(todo);
+                _unitOfWork.TodoItemRepository.Update(todo);
                 await _unitOfWork.CompleteAsync();
             }
         }
