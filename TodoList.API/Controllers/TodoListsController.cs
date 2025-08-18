@@ -9,24 +9,24 @@ namespace TodoList.API.Controllers
     [ApiController]
     public class TodoListsController : ControllerBase
     {
-        private readonly ITodoListService todoListService;
+        private readonly ITodoListService _todoListService;
 
         public TodoListsController(ITodoListService todoListService)
         {
-            this.todoListService = todoListService;
+            _todoListService = todoListService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoListDto>>> GetAll()
         {
-            var todoLists = await todoListService.GetAllAsync();
+            var todoLists = await _todoListService.GetAllAsync();
             return Ok(todoLists);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<TodoListDto>> GetById(Guid id)
         {
-            var todoList = await todoListService.GetByIdAsync(id);
+            var todoList = await _todoListService.GetByIdAsync(id);
             if (todoList == null)
             {
                 return NotFound();
@@ -37,13 +37,13 @@ namespace TodoList.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var todoList = await todoListService.GetByIdAsync(id);
+            var todoList = await _todoListService.GetByIdAsync(id);
             if (todoList == null)
             {
                 return NotFound();
             }
 
-            await todoListService.DeleteAsync(id);
+            await _todoListService.DeleteAsync(id);
             return NoContent();
         }
     }
