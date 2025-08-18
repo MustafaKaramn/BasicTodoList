@@ -29,5 +29,6 @@ namespace TodoList.DataAccess.Context
         }
 
         public DbSet<TodoItem> TodoItems { get; set; }
+        public DbSet<TodoList.Core.Entities.TodoList> TodoLists { get; set; }
     }
 }
