@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TodoList.Business.Interfaces;
-using TodoList.Business.DTOs;
 using TodoList.Core.Entities;
 using TodoList.Core.Helpers;
+using TodoList.Business.DTOs.TodoItemDTOs;
 
 namespace TodoList.API.Controllers
 {
@@ -40,7 +40,7 @@ namespace TodoList.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<TodoItemDto>> Create(CreateTodoDto todoItem)
+        public async Task<ActionResult<TodoItemDto>> Create(CreateTodoItemDto todoItem)
         {
             if (!ModelState.IsValid)
             {
@@ -52,7 +52,7 @@ namespace TodoList.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, UpdateTodoDto todoItem)
+        public async Task<IActionResult> Update(Guid id, UpdateTodoItemDto todoItem)
         {
             if (!ModelState.IsValid)
             {

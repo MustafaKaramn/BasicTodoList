@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FluentAssertions;
 using Moq;
-using TodoList.Business.DTOs;
+using TodoList.Business.DTOs.TodoItemDTOs;
 using TodoList.Business.Services;
 using TodoList.Core.Entities;
 using TodoList.DataAccess.Interfaces;

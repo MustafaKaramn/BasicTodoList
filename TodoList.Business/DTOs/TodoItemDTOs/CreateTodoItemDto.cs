@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TodoList.Business.DTOs
+namespace TodoList.Business.DTOs.TodoItemDTOs
 {
-    public class CreateTodoDto
+    public class CreateTodoItemDto
     {
         public string Title { get; set; }
         public string Description { get; set; }

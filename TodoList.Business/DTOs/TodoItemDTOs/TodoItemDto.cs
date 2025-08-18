@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TodoList.Business.DTOs
+namespace TodoList.Business.DTOs.TodoItemDTOs
 {
-    public class UpdateTodoDto
+    public class TodoItemDto
     {
+        public Guid Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public bool IsCompleted { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }

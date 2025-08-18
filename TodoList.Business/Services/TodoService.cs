@@ -6,7 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using TodoList.Business.DTOs;
+using TodoList.Business.DTOs.TodoItemDTOs;
 using TodoList.Business.Interfaces;
 using TodoList.Core.Entities;
 using TodoList.Core.Helpers;
@@ -26,7 +26,7 @@ namespace TodoList.Business.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<TodoItemDto> CreateTodoAsync(CreateTodoDto createTodo)
+        public async Task<TodoItemDto> CreateTodoAsync(CreateTodoItemDto createTodo)
         {
             var todoItem = _mapper.Map<TodoItem>(createTodo);
             todoItem.CreatedDate = DateTime.Now;
@@ -75,7 +75,7 @@ namespace TodoList.Business.Services
             return _mapper.Map<TodoItemDto>(todoItem);
         }
 
-        public async Task UpdateTodoAsync(Guid id, UpdateTodoDto todoItem)
+        public async Task UpdateTodoAsync(Guid id, UpdateTodoItemDto todoItem)
         {
             var todo = await _unitOfWork.TodoRepository.GetByIdAsync(id);
 
