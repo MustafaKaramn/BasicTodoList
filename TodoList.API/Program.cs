@@ -10,6 +10,11 @@ using Serilog;
 using Serilog.Formatting.Json;
 using TodoList.API.Services.Interfaces;
 using TodoList.API.Services;
+using TodoList.Core.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
 
@@ -29,6 +34,38 @@ try
             .WriteTo.Console()
             .WriteTo.File(new JsonFormatter(), "logs/log-.txt", rollingInterval: RollingInterval.Day, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information);
     });
+
+    // Identity configuration:
+    builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>(x =>
+    {
+        x.Password.RequireDigit = false;
+        x.Password.RequireLowercase = false;
+        x.Password.RequireUppercase = false;
+        x.Password.RequireNonAlphanumeric = false;
+        x.Password.RequiredLength = 6;
+    })
+        .AddEntityFrameworkStores<AppDbContext>()
+        .AddDefaultTokenProviders();
+
+    // JWT Authentication configuration:
+    builder.Services.AddAuthentication(x =>
+    {
+        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+        .AddJwtBearer(j =>
+        {
+            j.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = builder.Configuration["JWTSettings:Issuer"],
+                ValidAudience = builder.Configuration["JWTSettings:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWTSettings:Secret"]!))
+            };
+        });
 
     // Add services to the container.
     builder.Services.AddDbContext<AppDbContext>(x =>
@@ -50,6 +87,7 @@ try
     builder.Services.AddSwaggerGen();
 
     var app = builder.Build();
+
     app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
     if (app.Environment.IsDevelopment())
@@ -62,6 +100,7 @@ try
 
     app.UseStaticFiles();
 
+    app.UseAuthentication();
     app.UseAuthorization();
 
     app.MapControllers();
