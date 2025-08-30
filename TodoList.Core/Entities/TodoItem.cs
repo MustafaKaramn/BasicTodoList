@@ -15,6 +15,9 @@ namespace TodoList.Core.Entities
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
 
+        public Guid UserId { get; set; }
+        public AppUser User { get; set; }
+
         public ICollection<TodoList> TodoLists { get; set; } = new List<TodoList>();
     }
 }

@@ -13,6 +13,9 @@ namespace TodoList.Core.Entities
         public string Description { get; set; }
         public string? ImageUrl { get; set; }
 
+        public Guid UserId { get; set; }
+        public AppUser User { get; set; }
+
         public ICollection<TodoItem> TodoItems { get; set; } = new List<TodoItem>();
     }
 }
