@@ -26,6 +26,9 @@ namespace TodoList.Business.Tests
         public async Task GetTodoByIdAsync_ShouldReturnTodoDto_WhenTodoExists()
         {
             var testId = Guid.NewGuid();
+
+            var userId = Guid.Parse("1022f253-fcf6-45cf-9958-228011e3b0d7");
+
             var testTodoItem = new TodoItem { Id = testId, Title = "Test Todo", IsCompleted = false, CreatedDate = DateTime.Now };
             var testTodoDto = new TodoItemDto { Id = testId, Title = "Test Todo", IsCompleted = false, CreatedDate = DateTime.Now };
 
@@ -33,7 +36,7 @@ namespace TodoList.Business.Tests
             _mockMapper.Setup(m => m.Map<TodoItemDto>(testTodoItem)).Returns(testTodoDto);
 
             //Act
-            var result = await _service.GetByIdAsync(testId);
+            var result = await _service.GetByIdAsync(testId, userId);
 
             //Assert
             result.Should().NotBeNull();
@@ -47,10 +50,12 @@ namespace TodoList.Business.Tests
         {
             var testId = Guid.NewGuid();
 
+            var userId = Guid.Parse("1022f253-fcf6-45cf-9958-228011e3b0d7");
+
             _mockUnitOfWork.Setup(uow => uow.TodoItemRepository.GetByIdAsync(testId)).ReturnsAsync((TodoItem)null);
 
             //Act
-            var result = await _service.GetByIdAsync(testId);
+            var result = await _service.GetByIdAsync(testId, userId);
 
             //Assert
             result.Should().BeNull();
