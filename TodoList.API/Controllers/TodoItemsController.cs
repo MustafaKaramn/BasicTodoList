@@ -5,9 +5,11 @@ using TodoList.Business.Interfaces;
 using TodoList.Core.Entities;
 using TodoList.Core.Helpers;
 using TodoList.Business.DTOs.TodoItemDTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TodoList.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TodoItemsController : ControllerBase

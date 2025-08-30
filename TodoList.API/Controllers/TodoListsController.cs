@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TodoList.API.Services.Interfaces;
 using TodoList.Business.DTOs.TodoListDTOs;
@@ -6,6 +7,7 @@ using TodoList.Business.Interfaces;
 
 namespace TodoList.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TodoListsController : ControllerBase
