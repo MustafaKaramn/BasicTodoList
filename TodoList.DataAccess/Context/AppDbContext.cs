@@ -18,16 +18,29 @@ namespace TodoList.DataAccess.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<TodoItem>()
-                .Property(t => t.Title)
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<TodoList.Core.Entities.TodoList>()
+                .Property(t => t.Name)
                 .IsRequired()
-                .HasMaxLength(200);
+                .HasMaxLength(50);
+
+            modelBuilder.Entity<TodoList.Core.Entities.TodoList>()
+                .HasOne(t => t.User)
+                .WithMany()
+                .HasForeignKey(t => t.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
 
             modelBuilder.Entity<TodoItem>()
                 .Property(t => t.Description)
                 .HasMaxLength(400);
 
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<TodoItem>()
+                .HasOne(t => t.User)
+                .WithMany()
+                .HasForeignKey(t => t.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
         public DbSet<TodoItem> TodoItems { get; set; }
