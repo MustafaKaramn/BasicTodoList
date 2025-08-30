@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TodoList.Business.DTOs.AuthDTOs
 {
-    public class AuthResponse
+    public class AuthResponseDto
     {
         public bool IsSuccess { get; set; }
         public string Message { get; set; }

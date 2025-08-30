@@ -73,6 +73,9 @@ try
         x.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
     });
 
+    //AuthService:
+    builder.Services.AddScoped<IAuthService, AuthService>();
+
     //Unit of Work:
     builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
