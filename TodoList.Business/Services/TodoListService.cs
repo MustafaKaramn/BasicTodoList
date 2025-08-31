@@ -21,10 +21,11 @@ namespace TodoList.Business.Services
             _mapper = mapper;
         }
 
-        public async Task<TodoListDto> CreateAsync(CreateTodoListDto todoList, string? imageUrl)
+        public async Task<TodoListDto> CreateAsync(CreateTodoListDto todoList, string? imageUrl, Guid userId)
         {
             var createdTodoList = _mapper.Map<Core.Entities.TodoList>(todoList);
             createdTodoList.ImageUrl = imageUrl;
+            createdTodoList.UserId = userId;
 
             _unitOfWork.TodoListRepository.Add(createdTodoList);
             await _unitOfWork.CompleteAsync();
@@ -32,34 +33,43 @@ namespace TodoList.Business.Services
             return _mapper.Map<TodoListDto>(createdTodoList);
         }
 
-        public async Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid id, Guid userId)
         {
             var todoList = await _unitOfWork.TodoListRepository.GetByIdAsync(id);
 
-            if (todoList != null)
+            if (todoList != null && todoList.UserId == userId)
             {
                 _unitOfWork.TodoListRepository.Delete(todoList);
                 await _unitOfWork.CompleteAsync();
             }
         }
 
-        public async Task<IEnumerable<TodoListDto>> GetAllAsync()
+        public async Task<IEnumerable<TodoListDto>> GetAllAsync(Guid userId)
         {
             var todoLists = await _unitOfWork.TodoListRepository.GetAllAsync();
+
+            todoLists = todoLists.Where(t => t.UserId == userId);
+
             return _mapper.Map<IEnumerable<TodoListDto>>(todoLists);
         }
 
-        public async Task<TodoListDto> GetByIdAsync(Guid id)
+        public async Task<TodoListDto> GetByIdAsync(Guid id, Guid userId)
         {
             var todoList = await _unitOfWork.TodoListRepository.GetByIdAsync(id);
+
+            if (todoList == null || todoList.UserId != userId)
+            {
+                return _mapper.Map<TodoListDto>(null);
+            }
+
             return _mapper.Map<TodoListDto>(todoList);
         }
 
-        public async Task UpdateAsync(Guid id, UpdateTodoListDto todoList)
+        public async Task UpdateAsync(Guid id, UpdateTodoListDto todoList, Guid userId)
         {
             var existingTodoList = await _unitOfWork.TodoListRepository.GetByIdAsync(id);
 
-            if (existingTodoList != null)
+            if (existingTodoList != null && existingTodoList.UserId == userId)
             {
                 var updatedTodoList = _mapper.Map(todoList, existingTodoList);
                 _unitOfWork.TodoListRepository.Update(updatedTodoList);

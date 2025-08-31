@@ -9,10 +9,10 @@ namespace TodoList.Business.Interfaces
 {
     public interface ITodoListService
     {
-        Task<IEnumerable<TodoListDto>> GetAllAsync();
-        Task<TodoListDto> GetByIdAsync(Guid id);
-        Task<TodoListDto> CreateAsync(CreateTodoListDto todoList, string? imageUrl);
-        Task UpdateAsync(Guid id, UpdateTodoListDto todoList);
-        Task DeleteAsync(Guid id);
+        Task<IEnumerable<TodoListDto>> GetAllAsync(Guid userId);
+        Task<TodoListDto> GetByIdAsync(Guid id, Guid userId);
+        Task<TodoListDto> CreateAsync(CreateTodoListDto todoList, string? imageUrl, Guid userId);
+        Task UpdateAsync(Guid id, UpdateTodoListDto todoList, Guid userId);
+        Task DeleteAsync(Guid id, Guid userId);
     }
 }
