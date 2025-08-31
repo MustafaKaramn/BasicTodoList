@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Query;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -11,7 +12,10 @@ namespace TodoList.DataAccess.Interfaces
     {
         Task<T> GetByIdAsync(Guid id);
 
-        Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, int? skip = null, int? take = null);
+        Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
+            int? skip = null, int? take = null);
+
         Task<int> CountAsync(Expression<Func<T, bool>>? filter = null);
 
         void Add(T entity);

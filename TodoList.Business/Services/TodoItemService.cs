@@ -33,6 +33,14 @@ namespace TodoList.Business.Services
             todoItem.UserId = userId;
             todoItem.IsCompleted = false;
 
+            //Gelen todo'daki TodoListIds'ye göre ilişkili TodoList'lerin eklenmesi.
+            if (createTodo.TodoListIds.Any())
+            {
+                var todoLists = await _unitOfWork.TodoListRepository.GetAllAsync(t => t.UserId == userId && createTodo.TodoListIds.Contains(t.Id));
+
+                todoItem.TodoLists = todoLists.ToList();
+            }
+
             _unitOfWork.TodoItemRepository.Add(todoItem);
             await _unitOfWork.CompleteAsync();
 
@@ -82,18 +90,30 @@ namespace TodoList.Business.Services
             return _mapper.Map<TodoItemDto>(todoItem);
         }
 
-        public async Task UpdateAsync(Guid id, UpdateTodoItemDto todoItem, Guid userId)
+        public async Task UpdateAsync(Guid id, UpdateTodoItemDto updateDto, Guid userId)
         {
-            var todo = await _unitOfWork.TodoItemRepository.GetByIdAsync(id);
+            //TodoItem'ı ve ilişkili TodoList'leri getir.
+            var todoLists = await _unitOfWork.TodoItemRepository.GetAllAsync(
+                filter: i => i.Id == id && i.UserId == userId,
+                include: i => i.Include(t => t.TodoLists));
 
-            if (todo != null && todo.UserId == userId)
+            var existingItem = todoLists.FirstOrDefault();
+
+            if (existingItem != null)
             {
-                _mapper.Map(todoItem, todo);
-                todo.UpdatedDate = DateTime.Now;
+                _mapper.Map(updateDto, existingItem);
+                existingItem.UpdatedDate = DateTime.Now;
 
-                _unitOfWork.TodoItemRepository.Update(todo);
-                await _unitOfWork.CompleteAsync();
+                existingItem.TodoLists.Clear();
+
+                if (updateDto.TodoListIds.Any())
+                {
+                    var lists = await _unitOfWork.TodoListRepository.GetAllAsync(t => t.UserId == userId && updateDto.TodoListIds.Contains(t.Id));
+                    existingItem.TodoLists = lists.ToList();
+                }
             }
+            _unitOfWork.TodoItemRepository.Update(existingItem);
+            await _unitOfWork.CompleteAsync();
         }
     }
 }
