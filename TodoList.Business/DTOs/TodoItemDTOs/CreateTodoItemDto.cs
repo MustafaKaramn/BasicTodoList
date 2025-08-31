@@ -10,5 +10,7 @@ namespace TodoList.Business.DTOs.TodoItemDTOs
     {
         public string Title { get; set; }
         public string Description { get; set; }
+
+        public ICollection<Guid> TodoListIds { get; set; } = new List<Guid>();
     }
 }
