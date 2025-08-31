@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TodoList.API.Extensions;
 using TodoList.API.Services.Interfaces;
 using TodoList.Business.DTOs.TodoListDTOs;
 using TodoList.Business.Interfaces;
@@ -29,6 +30,8 @@ namespace TodoList.API.Controllers
                 return BadRequest(ModelState);
             }
 
+            var userId = User.GetUserId();
+
             string? imageUrl = null;
 
             if (file != null && file.Length > 0)
@@ -43,7 +46,7 @@ namespace TodoList.API.Controllers
                 }
             }
 
-            var createdTodoList = await _todoListService.CreateAsync(createTodoListDto, imageUrl);
+            var createdTodoList = await _todoListService.CreateAsync(createTodoListDto, imageUrl, userId);
 
             return CreatedAtAction(nameof(GetById), new { id = createdTodoList.Id }, createdTodoList);
         }
@@ -52,14 +55,18 @@ namespace TodoList.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoListDto>>> GetAll()
         {
-            var todoLists = await _todoListService.GetAllAsync();
+            var userId = User.GetUserId();
+
+            var todoLists = await _todoListService.GetAllAsync(userId);
             return Ok(todoLists);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<TodoListDto>> GetById(Guid id)
         {
-            var todoList = await _todoListService.GetByIdAsync(id);
+            var userId = User.GetUserId();
+
+            var todoList = await _todoListService.GetByIdAsync(id, userId);
             if (todoList == null)
             {
                 return NotFound();
@@ -70,15 +77,17 @@ namespace TodoList.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var todoList = await _todoListService.GetByIdAsync(id);
+            var userId = User.GetUserId();
+
+            var todoList = await _todoListService.GetByIdAsync(id, userId);
             if (todoList == null)
             {
                 return NotFound();
             }
 
-            await _todoListService.DeleteAsync(id);
+            await _todoListService.DeleteAsync(id, userId);
             _fileService.DeleteFileAsync(todoList.ImageUrl);
-            
+
             return NoContent();
         }
     }
